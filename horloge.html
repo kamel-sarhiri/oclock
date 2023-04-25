@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Horloge</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>Horloge</h1>
+    <p>Cette horloge affiche l'heure actuelle en France</p>
+    <div id="clock"></div>
+    <script>
+      function updateTime() {
+        // Définir le décalage horaire en secondes
+        var timezoneOffset = 1 * 60 * 60; // UTC + 1
+        // Créer un objet Date pour l'heure actuelle
+        var now = new Date(Date.now() + timezoneOffset);
+        // Récupérer les heures, minutes et secondes
+        var hours = now.getHours().toString().padStart(2, "0");
+        var minutes = now.getMinutes().toString().padStart(2, "0");
+        var seconds = now.getSeconds().toString().padStart(2, "0");
+        // Mettre à jour l'affichage de l'horloge
+        var clockElement = document.getElementById("clock");
+        clockElement.textContent = hours + ":" + minutes + ":" + seconds;
+      }
+      // Mettre à jour l'heure toutes les secondes
+      setInterval(updateTime, 1000);
+    </script>
+  </body>
+</html>

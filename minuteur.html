@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Minuteur</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div>
+      <h2>Minuteur</h2>
+      <p>
+        Ce minuteur permet de définir un temps et de le lancer. Il s'arrête
+        automatiquement lorsque le temps est écoulé.
+      </p>
+      <div>
+        <label for="time">Temps :</label>
+        <input type="number" id="time" min="0" value="0" />
+        <button id="addTime">+</button>
+        <button id="subTime">-</button>
+      </div>
+      <div>
+        <button id="startStop">Démarrer</button>
+        <button id="reset">Réinitialiser</button>
+      </div>
+      <div>
+        <p id="timer">00:00:00</p>
+      </div>
+    </div>
+  </body>
+
+  <!-- script.js -->
+  <script>
+    const timeInput = document.getElementById("time");
+    const addTimeBtn = document.getElementById("addTime");
+    const subTimeBtn = document.getElementById("subTime");
+    const startStopBtn = document.getElementById("startStop");
+    const resetBtn = document.getElementById("reset");
+    const timerDisplay = document.getElementById("timer");
+
+    let intervalId;
+    let timeLeft;
+    let isRunning = false;
+
+    function updateTimeDisplay() {
+      const minutes = Math.floor(timeLeft / 60)
+        .toString()
+        .padStart(2, "0");
+      const seconds = (timeLeft % 60).toString().padStart(2, "0");
+      timerDisplay.textContent = `00:${minutes}:${seconds}`;
+    }
+
+    function stopTimer() {
+      clearInterval(intervalId);
+      intervalId = null;
+      isRunning = false;
+      startStopBtn.textContent = "Démarrer";
+    }
+
+    function startTimer() {
+      intervalId = setInterval(() => {
+        timeLeft--;
+        updateTimeDisplay();
+        if (timeLeft === 0) {
+          stopTimer();
+          alert("Le temps est écoulé !");
+        }
+      }, 1000);
+      isRunning = true;
+      startStopBtn.textContent = "Arrêter";
+    }
+
+    function resetTimer() {
+      stopTimer();
+      timeInput.value = "0";
+      timeLeft = 0;
+      updateTimeDisplay();
+    }
+
+    addTimeBtn.addEventListener("click", () => {
+      timeInput.stepUp();
+    });
+
+    subTimeBtn.addEventListener("click", () => {
+      timeInput.stepDown();
+    });
+
+    startStopBtn.addEventListener("click", () => {
+      if (isRunning) {
+        stopTimer();
+      } else {
+        timeLeft = timeInput.value * 60;
+        startTimer();
+      }
+    });
+
+    resetBtn.addEventListener("click", () => {
+      resetTimer();
+    });
+
+    resetTimer();
+  </script>
+</html>

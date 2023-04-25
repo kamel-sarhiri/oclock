@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Réveil</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>Réveil</h1>
+    <p>Ce réveil permet d'afficher un message à une heure donnée.</p>
+    <form>
+      <label for="heure">Heure :</label>
+      <input type="number" id="heure" min="0" max="23" />
+      <label for="minute">Minute :</label>
+      <input type="number" id="minute" min="0" max="59" />
+      <label for="message">Message :</label>
+      <input type="text" id="message" />
+      <button type="button" id="ajouter">Ajouter l'alarme</button>
+    </form>
+    <h2>Liste des alarmes</h2>
+    <ul id="liste"></ul>
+    <script>
+      function ajouterAlarme() {
+        const heure = parseInt(document.getElementById("heure").value);
+        const minute = parseInt(document.getElementById("minute").value);
+        const message = document.getElementById("message").value;
+        const maintenant = new Date();
+        const alarme = new Date(
+          maintenant.getFullYear(),
+          maintenant.getMonth(),
+          maintenant.getDate(),
+          heure,
+          minute
+        );
+        const tempsRestant = alarme - maintenant;
+        if (tempsRestant < 0) {
+          alert(`L'heure de l'alarme est déjà passée`);
+        } else {
+          const listItem = document.createElement("li");
+          const spanTemps = document.createElement("span");
+          const spanMessage = document.createElement("span");
+          spanMessage.textContent = message;
+          listItem.appendChild(spanMessage);
+          listItem.appendChild(spanTemps);
+          document.getElementById("liste").appendChild(listItem);
+          function actualiserTempsRestant() {
+            const maintenant = new Date();
+            const tempsRestant = alarme - maintenant;
+            if (tempsRestant < 0) {
+              spanTemps.textContent = " Passée";
+              clearInterval(intervalID);
+            } else {
+              const secondes = Math.floor(tempsRestant / 1000) % 60;
+              const minutes = Math.floor(tempsRestant / 1000 / 60) % 60;
+              const heures = Math.floor(tempsRestant / 1000 / 60 / 60);
+              spanTemps.textContent = ` Dans ${heures}h ${minutes}m ${secondes}s`;
+            }
+          }
+          actualiserTempsRestant();
+          const intervalID = setInterval(actualiserTempsRestant, 1000);
+        }
+      }
+      document
+        .getElementById("ajouter")
+        .addEventListener("click", ajouterAlarme);
+    </script>
+  </body>
+</html>

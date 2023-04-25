@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chronomètre</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>Chronomètre</h1>
+    <p>
+      Ce chronomètre permet de mesurer le temps écoulé depuis le début de la
+      mesure.
+    </p>
+    <p id="chrono">00:00:00</p>
+    <button id="start_stop">Start</button>
+    <button id="reset">Reset</button>
+    <button id="tour">Tour</button>
+    <ol id="tours"></ol>
+    <script>
+      let timerInterval;
+      let timerTime = 0;
+      let isRunning = false;
+
+      function startStop() {
+        isRunning = !isRunning;
+        if (isRunning) {
+          timerInterval = setInterval(updateTimer, 10);
+          document.getElementById("start_stop").textContent = "Stop";
+        } else {
+          clearInterval(timerInterval);
+          document.getElementById("start_stop").textContent = "Start";
+        }
+      }
+
+      function updateTimer() {
+        timerTime += 10;
+        let time = new Date(timerTime);
+        let minutes = time.getUTCMinutes().toString().padStart(2, "0");
+        let seconds = time.getUTCSeconds().toString().padStart(2, "0");
+        let milliseconds = Math.floor(time.getUTCMilliseconds() / 10)
+          .toString()
+          .padStart(2, "0");
+        document.getElementById(
+          "chrono"
+        ).textContent = `${minutes}:${seconds}:${milliseconds}`;
+      }
+
+      function resetTimer() {
+        timerTime = 0;
+        document.getElementById("chrono").textContent = "00:00:00";
+        document.getElementById("tours").innerHTML = "";
+      }
+
+      function tour() {
+        let time = document.getElementById("chrono").textContent;
+        let tourItem = document.createElement("li");
+        tourItem.textContent = time;
+        document.getElementById("tours").appendChild(tourItem);
+      }
+
+      document
+        .getElementById("start_stop")
+        .addEventListener("click", startStop);
+      document.getElementById("reset").addEventListener("click", resetTimer);
+      document.getElementById("tour").addEventListener("click", tour);
+    </script>
+  </body>
+</html>
